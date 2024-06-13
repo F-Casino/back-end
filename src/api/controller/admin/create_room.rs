@@ -2,7 +2,7 @@ use axum::Json;
 use chrono::NaiveDateTime;
 use serde::Deserialize;
 
-use crate::Result;
+use crate::{api::extractor::JWTAdminClaims, Result};
 
 #[derive(Deserialize)]
 pub struct CreateRoomData {
@@ -11,7 +11,10 @@ pub struct CreateRoomData {
     end: NaiveDateTime,
 }
 
-pub async fn create_room(Json(data): Json<CreateRoomData>) -> Result<()> {
+pub async fn create_room(
+    _: JWTAdminClaims,
+    Json(data): Json<CreateRoomData>,
+) -> Result<()> {
     // TODO: implement create room
     // convert NaiveDateTime to DateTime<Tz> using config::TIME_ZONE.from_local_datetime(...)
     Ok(())
