@@ -3,6 +3,7 @@ use chrono_tz::Tz;
 
 use crate::util::time;
 
+#[derive(Debug)]
 pub struct Room {
     pub name: String,
     pub max_participant_count: u32,

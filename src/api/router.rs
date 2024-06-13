@@ -3,6 +3,7 @@ use axum::http::header::{
     ACCESS_CONTROL_ALLOW_ORIGIN, AUTHORIZATION, CONTENT_TYPE, ORIGIN,
 };
 use axum::http::{HeaderName, HeaderValue, Method};
+use axum::routing::post;
 use axum::{routing::get, Router};
 use std::sync::Arc;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
@@ -28,7 +29,12 @@ pub fn build(state: Arc<AppState>) -> Router {
     ];
 
     // register routes
-    let router = Router::new().route("/", get(controller::ping));
+    let router = Router::new()
+        .route("/", get(controller::ping))
+        .route("/admin", get(controller::admin::index))
+        .route("/admin/login", post(controller::admin::login))
+        .route("/admi/create-room", post(controller::admin::create_room))
+        ;
 
     // register global middlewares
     let router = router.layer(TraceLayer::new_for_http()).layer(
