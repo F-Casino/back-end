@@ -1,4 +1,5 @@
 use axum::Json;
+use chrono::{Duration, Utc};
 use once_cell::sync::Lazy;
 use serde::Deserialize;
 use jsonwebtoken::{encode, EncodingKey, Header};
@@ -21,9 +22,15 @@ pub async fn login(Json(data): Json<LoginData>) -> Result<String> {
             message: "Username or password is incorrect".to_string(),
         });
     }
+
+    let exp = Utc::now()
+        .checked_add_signed(Duration::hours(1))
+        .expect("valid timestamp")
+        .timestamp() as u64;
+
     let claims = JWTAdminClaims {
         sub: data.username.clone(),
-        exp: 60000,
+        exp: exp,
     };
 
     let token = encode(&Header::default(), &claims, &ENCODING_KEY);
