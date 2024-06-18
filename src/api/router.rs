@@ -34,7 +34,8 @@ pub fn build(state: Arc<AppState>) -> Router {
         .route("/admin", get(controller::admin::index))
         .route("/admin/login", post(controller::admin::login))
         .route("/admin/create-room", post(controller::admin::create_room))
-        .route("/room/get", get(controller::room::get));
+        .route("/room/get", get(controller::room::get))
+        .route("/user/bet", post(controller::user::bet));
 
     // register global middlewares
     let router = router.layer(TraceLayer::new_for_http()).layer(

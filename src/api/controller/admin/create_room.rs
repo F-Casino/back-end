@@ -1,10 +1,8 @@
 use std::sync::Arc;
 
-use axum::{extract::State, Json, debug_handler};
+use axum::{debug_handler, extract::State, Json};
 use chrono::{NaiveDateTime, TimeZone};
 use serde::Deserialize;
-
-use crate::util::time;
 
 use crate::{api::extractor::JWTAdminClaims, config, model::room::Room, AppState, Error, Result};
 
@@ -12,7 +10,7 @@ use crate::{api::extractor::JWTAdminClaims, config, model::room::Room, AppState,
 pub struct CreateRoomData {
     name: String,
     max_participant_count: u32,
-    end: NaiveDateTime,
+    start: NaiveDateTime,
 }
 
 #[debug_handler]
@@ -21,20 +19,16 @@ pub async fn create_room(
     _: JWTAdminClaims,
     Json(data): Json<CreateRoomData>,
 ) -> Result<()> {
-    // TODO: implement create room
-    // convert NaiveDateTime to DateTime<Tz> using config::TIME_ZONE.from_local_datetime(...)
-    let end_datetime = config::TIME_ZONE
-        .from_local_datetime(&data.end)
+    let start = config::TIME_ZONE
+        .from_local_datetime(&data.start)
         .single()
-        .ok_or_else(|| Error::Other(
-            anyhow::anyhow!("Invalid end datetime")
-        ))?;
-    
+        .ok_or_else(|| Error::Other(anyhow::anyhow!("Invalid end datetime")))?;
+
     let new_room = Room {
         name: data.name,
         max_participant_count: data.max_participant_count,
-        start: time::now(),
-        end: end_datetime
+        start,
+        bet_infos: Vec::new(),
     };
 
     let mut room_lock = state.room.lock().unwrap();
