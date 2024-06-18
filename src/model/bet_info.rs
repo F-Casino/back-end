@@ -14,6 +14,6 @@ pub enum BetKind {
 #[derive(Debug, Deserialize, Clone)]
 pub struct BetInfo {
     pub user_public_key: Pubkey,
-    pub amoutn: u64,
+    pub amount: u64,
     pub kind: BetKind,
 }
