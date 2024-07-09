@@ -1,3 +1,4 @@
+use sailfish::TemplateOnce;
 use solana_sdk::pubkey::Pubkey;
 use serde::{Deserialize, Serialize};
 use super::bet_kind::BetKind;

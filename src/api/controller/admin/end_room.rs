@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::str::FromStr;
 use std::sync::Arc;
 
 use axum::extract::State;
@@ -31,13 +32,15 @@ pub async fn end_room(State(state): State<Arc<AppState>>, jar: CookieJar) -> Res
 
             let mut receiver_amount = HashMap::new();
 
-            let result_bet_kind = [BetKind::random(), BetKind::random(), BetKind::random()];
+            let result_bet_kind = [BetKind::Fish, BetKind::random(), BetKind::random()];
             for bet in bet_infos.iter() {
                 if !result_bet_kind.contains(&bet.kind) {
                     continue;
                 }
 
-                *receiver_amount.entry(bet.user_public_key.clone()).or_insert(0) += bet.amount;
+                *receiver_amount
+                    .entry(bet.user_public_key.clone())
+                    .or_insert(0) += bet.amount;
             }
 
             for (pub_key, coin) in receiver_amount.iter_mut() {
@@ -54,7 +57,8 @@ pub async fn end_room(State(state): State<Arc<AppState>>, jar: CookieJar) -> Res
             let admin_key_pair = Keypair::from_base58_string(config::ADMIN_PRIVATE_KEY);
 
             for (receiver_pub_key, amount) in receiver_amount {
-                let receiver_pub_key = Pubkey::new(receiver_pub_key.as_bytes());
+                let receiver_pub_key = Pubkey::from_str(&receiver_pub_key)
+                    .map_err(|error| anyhow::anyhow!("Invalid pub key"))?;
                 let transfer_instruction = system_instruction::transfer(
                     &admin_key_pair.pubkey(),
                     &receiver_pub_key,
@@ -68,8 +72,11 @@ pub async fn end_room(State(state): State<Arc<AppState>>, jar: CookieJar) -> Res
                     client.get_latest_blockhash().unwrap(),
                 );
 
-                let signature = client.send_and_confirm_transaction(&transaction).unwrap();
-                tracing::info!("{:?}", signature);
+                let signature = client
+                    .send_and_confirm_transaction(&transaction)
+                    .map_err(|error| anyhow::anyhow!(error.to_string()))?;
+
+                tracing::info!("Transfer to {} with amount {}", receiver_pub_key, amount);
             }
 
             *room = None;

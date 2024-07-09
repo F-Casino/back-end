@@ -1,0 +1,3 @@
+<div>
+    <p>Public key: <%= user_public_key %></p> 
+</div>

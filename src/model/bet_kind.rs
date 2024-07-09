@@ -24,6 +24,19 @@ impl Distribution<BetKind> for Standard {
     }
 }
 
+impl Into<String> for BetKind {
+    fn into(self) -> String {
+        match self {
+            BetKind::Fish => "Fish".to_string(),
+            BetKind::Prawn => "Prawn".to_string(),
+            BetKind::Crab => "Crab".to_string(),
+            BetKind::Cock => "Cock".to_string(),
+            BetKind::Calabash => "Calabash".to_string(),
+            BetKind::Tiger => "Tiger".to_string(),
+        }
+    }
+}
+
 impl BetKind {
     pub fn random() -> BetKind {
         rand::random()
