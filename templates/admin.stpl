@@ -1,0 +1,12 @@
+<div id="create-room">
+    <p>Create room</p>
+    <form
+        hx-post="/admin/create-room"
+        hx-ext="json-enc"
+    >
+        <label for="public-key">Room name: </label>
+        <input type="text" id="username" name="name"/> <br/>
+        <button type="submit">Create</button>
+    </form>
+</div>
+<div hx-get="/room/get" hx-trigger="load, every 2s">div>

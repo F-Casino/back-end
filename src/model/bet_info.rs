@@ -1,7 +1,7 @@
 use solana_sdk::pubkey::Pubkey;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum BetKind {
     Fish,
     Prawn,
@@ -11,7 +11,7 @@ pub enum BetKind {
     Tiger,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BetInfo {
     pub user_public_key: Pubkey,
     pub amount: u64,
