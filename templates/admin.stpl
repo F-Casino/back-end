@@ -3,10 +3,12 @@
     <form
         hx-post="/admin/create-room"
         hx-ext="json-enc"
+        hx-swap="none"
     >
         <label for="public-key">Room name: </label>
         <input type="text" id="username" name="name"/> <br/>
         <button type="submit">Create</button>
     </form>
 </div>
-<div hx-get="/room/get" hx-trigger="load, every 2s">div>
+<div hx-get="/room/get" hx-trigger="load, every 2s"></div>
+<button hx-post="/admin/end-room">End</button>
