@@ -32,7 +32,7 @@ pub async fn end_room(State(state): State<Arc<AppState>>, jar: CookieJar) -> Res
 
             let mut receiver_amount = HashMap::new();
 
-            let result_bet_kind = [BetKind::Fish, BetKind::random(), BetKind::random()];
+            let result_bet_kind = [BetKind::random(), BetKind::random(), BetKind::random()];
             for bet in bet_infos.iter() {
                 if !result_bet_kind.contains(&bet.kind) {
                     continue;
