@@ -1,0 +1,5 @@
+<% for bet_info in data.iter() { %>
+    <div>
+        <p>Public key: <%= bet_info.user_public_key %></p> 
+    </div>
+<% } %>

@@ -34,7 +34,9 @@ pub fn build(state: Arc<AppState>) -> Router {
         .route("/admin", get(controller::admin::index))
         .route("/admin/login", post(controller::admin::login))
         .route("/admin/create-room", post(controller::admin::create_room))
+        .route("/admin/end-room", post(controller::admin::end_room))
         .route("/room/get", get(controller::room::get))
+        .route("/room/get-bets", get(controller::room::get_bets))
         .route("/user/bet", post(controller::user::bet));
 
     // register global middlewares
